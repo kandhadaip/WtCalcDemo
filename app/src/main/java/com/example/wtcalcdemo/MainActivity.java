@@ -4,6 +4,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -62,6 +64,53 @@ public class MainActivity extends AppCompatActivity {
         //Display the output weight in txtViewResults using correct
         //unit as Kgs (if converting from pounds to kilos) and
         //Lbs (if converting kilos to pounds)
+
+        btnConvertWt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (radGroupConv.getCheckedRadioButtonId() == -1){
+                    Toast.makeText(MainActivity.this, "Please check conversion type",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    double inputWt = 0, outputWt = 0;
+                    try {
+                        inputWt =
+                                Double.parseDouble(editTextInputWt
+                                        .getText().toString());
+                        if (inputWt <= 0) {
+                            Toast.makeText(MainActivity.this, "Input Weight must be > 0",
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (radGroupConv.getCheckedRadioButtonId()
+                                == R.id.radBtnKgsToLbs){
+                            if (inputWt > 500){
+                                Toast.makeText(MainActivity.this, "Baggage limit exceeded",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                //I forgot to add units at the end in class, so have added
+                                //it here
+                                outputWt = inputWt*2.2;
+                                txtViewResults
+                                        .setText(String.format("Converted Wt: %.2f Lbs", outputWt));
+                            }
+                        } else if (radGroupConv.getCheckedRadioButtonId() == R.id.radBtnLbsToKgs) {
+                            if (inputWt > 1000){
+                                Toast.makeText(MainActivity.this, "Baggage limit exceeded",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                //I forgot to add the unit in class
+                                outputWt = inputWt / 2.2;
+                                txtViewResults
+                                        .setText(String.format("Converted Wt: %.2f Kgs", outputWt));
+                            }
+                        }
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                        Log.d("WT DEMO",ex.getMessage());
+                    }
+                }
+            }
+        });
+
 
     }
 }
